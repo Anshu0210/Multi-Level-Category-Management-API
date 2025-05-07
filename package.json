@@ -1,0 +1,31 @@
+{
+	"name": "backend",
+	"version": "1.0.0",
+	"description": "Anglara practical task",
+	"main": "dist/app.js",
+	"scripts": {
+		"test": "tsc && nodemon dist/app.js",
+		"start": "tsc && node dist/app.js"
+	},
+	"keywords": [],
+	"author": "Anshu Shah",
+	"license": "ISC",
+	"dependencies": {
+		"bcryptjs": "^3.0.2",
+		"cors": "^2.8.5",
+		"express": "^4.17.1",
+		"jsonwebtoken": "^9.0.2",
+		"mongoose": "^8.13.0",
+		"nodemon": "^3.1.9",
+		"typeorm": "^0.3.21"
+	},
+	"devDependencies": {
+		"@types/node": "^22.15.14",
+		"@types/bcryptjs": "^3.0.0",
+		"@types/cors": "^2.8.17",
+		"@types/express": "^4.17.1",
+		"@types/jsonwebtoken": "^9.0.9",
+		"@types/mongoose": "^5.11.97",
+		"typescript": "^5.8.3"
+	}
+}

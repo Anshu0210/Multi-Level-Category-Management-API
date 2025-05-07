@@ -1,0 +1,20 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# dotenv environment variables
+.env
+
+# TypeScript
+dist/
+*.tsbuildinfo
+
+# VSCode settings
+.vscode/
+
+# Debug
+*.local

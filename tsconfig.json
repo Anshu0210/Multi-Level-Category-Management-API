@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "emitDecoratorMetadata":true,
+      "experimentalDecorators": true,
+      "module": "commonjs",
+      "esModuleInterop": true,
+      "target": "ES6",
+      "moduleResolution": "node",
+      "strict": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "sourceMap": true,
+      "outDir": "dist",
+      "rootDir": "./src"
+    },
+    "lib": ["es2015"],
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules"]
+  }
