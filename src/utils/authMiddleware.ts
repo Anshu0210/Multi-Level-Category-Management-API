@@ -9,10 +9,10 @@ export const verifyToken = async (req: Request | any, res: Response, next: NextF
 
     const decoded: any = jwt.verify(token, `${process.env.JWT_SECRET}`);
     if (decoded) {
-      const _id = decoded?.userId;
+      const _id = decoded?.user?._id;
       const userData = await User.findOne({ _id, isActive: true });
       if (!userData) throw new Error("Unauthorised request");
-      req['user'] = decoded;
+      req['user'] = decoded?.user;
       next();
     }
   } catch (err: any) {

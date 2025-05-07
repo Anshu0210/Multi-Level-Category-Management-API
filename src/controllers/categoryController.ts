@@ -25,7 +25,7 @@ export const getCategories = async (req: Request, res: Response): Promise<any> =
     const data = buildCategoryTree(categories, 'parent');
     if (!data?.length) throw new Error(`Category not found!`);
 
-    return res.json({ message: '', data });
+    return res.json({ message: 'Category tree list found successfully!!', data });
   } catch (err: any) {
     return res.status(404).json({ error: err.message });
   }
