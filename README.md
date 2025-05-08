@@ -79,4 +79,4 @@ JWT_SECRET=your_jwt_secret
 
 
 4. Run the server
-npm run dev
+npm run start

@@ -15,7 +15,7 @@ const categorySchema = new Schema<ICategory>(
 		name: {
 			type: String,
 			required: [true, 'Category name is required'],
-			minlength: [5, 'Category name must be at least 5 characters long'],
+			minlength: [3, 'Category name must be at least 3 characters long'],
 			unique: [true, 'Category already exist!!']
 		},
 		parent: { type: Schema.Types.ObjectId, ref: 'Category', default: null },

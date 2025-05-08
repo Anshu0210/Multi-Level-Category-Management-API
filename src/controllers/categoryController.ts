@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Category } from '../models/category';
 import mongoose from 'mongoose';
+import { buildTree, cleanMongooseTree } from '../utils/nodeTree';
 
 export const createCategory = async (req: any | Request, res: Response): Promise<any> => {
   try {
@@ -20,12 +21,15 @@ export const createCategory = async (req: any | Request, res: Response): Promise
 
 export const getCategories = async (req: Request, res: Response): Promise<any> => {
   try {
-    const categories = await Category.find();
+    const categories: any = await Category.find();
 
-    const data = buildCategoryTree(categories, 'parent');
-    if (!data?.length) throw new Error(`Category not found!`);
+    const tree = buildTree(categories);
 
-    return res.json({ message: 'Category tree list found successfully!!', data });
+    const clean = tree.map(cleanMongooseTree);
+
+    if (!clean?.length) throw new Error(`Category not found!`);
+
+    return res.json({ message: 'Category tree list found successfully!!', data: clean });
   } catch (err: any) {
     return res.status(404).json({ error: err.message });
   }
@@ -42,10 +46,8 @@ export const updateCategory = async (req: Request, res: Response): Promise<any> 
 
     await category.save();
 
-    // inactive its all subcategory
-    if (status === 'inactive') {
-      await inActiveWhileParentIsInactive(id);
-    }
+    // active and inactive its all subcategory
+    await inActiveWhileParentIsInactive(id, status);
 
     return res.status(200).json({ id, message: 'Category updated successfully!!' });
   } catch (err: any) {
@@ -85,19 +87,17 @@ export const deleteCategory = async (req: Request, res: Response): Promise<any> 
 };
 
 // use to inactive it's all sub category
-const inActiveWhileParentIsInactive = async (id: string) => {
-  const subCat = await Category.find({ parent: new mongoose.Types.ObjectId(id), status: 'active' });
+const inActiveWhileParentIsInactive = async (id: string, status: string) => {
+  const subCat = await Category.find({ parent: new mongoose.Types.ObjectId(id), status: status === 'inactive' ? 'active' : 'inactive' });
 
   if (subCat?.length) {
     for (let res of subCat) {
-      await Category.updateMany({ parent: res._id, status: 'active' },
-        { $set: { status: 'inactive' } });
+      await Category.updateMany({ parent: new mongoose.Types.ObjectId(id), status: status === 'inactive' ? 'active' : 'inactive' },
+        { $set: { status: status } });
 
+      const ids: any = res?._id;
+      await inActiveWhileParentIsInactive(new mongoose.Types.ObjectId(ids).toString(), status);
 
-      const subCatData = await Category.find({ parent: res._id, status: 'active' });
-      if (subCatData?.length) {
-        await inActiveWhileParentIsInactive(JSON.stringify(res._id));
-      } else { return true }
     }
   } else {
     return true
@@ -107,7 +107,7 @@ const inActiveWhileParentIsInactive = async (id: string) => {
 /**
  * this function use create category tree
  * @param categories
- * @returns 
+ * @returns
  */
 const buildCategoryTree = (data: any[], key: string, parentId: number | null = null): any[] => {
   return data
